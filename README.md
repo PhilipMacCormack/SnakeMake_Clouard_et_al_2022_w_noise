@@ -50,6 +50,20 @@ This folder contains all scripts necessary to run Prophaser, an imputation softw
 
 #### Scripts_evaluation
 
+##### imputation_quality.py
+This script computes the results with customized metrics from true vs. imputed data sets.
+
+##### quality.py
+This script creates metrics for assessing imputation quality.
+
+##### test_qual.py & run_test_qual.sh
+*test_qual.py* plots the metrics, and *run_test_qual.sh* is the script utilized to run *test_qual.py*.
+
+##### chunkvcf.py
+This script enables parallelization by creating "chunks" of data to forward into the relevant scripts.
+
+##### dataframe.py
+This script converts data into dataframes to allow downstream analysis. 
 
 ## References 
 Clouard C, Ausmees K, Nettelblad C. A joint use of pooling and imputation for genotyping SNPs. BMC Bioinformatics. 2022 Oct 13;23(1):421. doi: 10.1186/s12859-022-04974-7. PMID: 36229780; PMCID: PMC9563787.
