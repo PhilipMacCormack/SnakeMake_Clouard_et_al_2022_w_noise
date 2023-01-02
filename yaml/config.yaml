@@ -1,0 +1,9 @@
+option:
+        noise: True
+        noise_intensity: 0
+
+permanent:
+        fmt_pooling: 'GP'
+        variant_id_type: 'id'
+        dataset: 'Clouard_2022.vcf.gz'
+        call_freq_v: 'Call_Freq_Clouard_2022.txt'

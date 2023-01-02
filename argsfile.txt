@@ -1,0 +1,9 @@
+./Output/quantiles
+Output/splitting/IMP.chr20.snps.gt.vcf.gz
+Output/splitting/IMP.chr20.snps.gl.vcf.gz
+Output/beagle/IMP.chr20.pooled.imputed.vcf.gz
+Output/prophaser/IMP.chr20.pooled.imputed.vcf.gz
+20221219
+5
+0.01
+1

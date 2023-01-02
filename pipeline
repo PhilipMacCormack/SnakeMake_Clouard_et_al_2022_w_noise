@@ -1,0 +1,147 @@
+configfile: 'yaml/config.yaml'
+
+rule all:
+        input:
+                #'Output/splitting/study.population'                      # uncomment: stop after splitting
+                #'Output/pooling/IMP.chr20.pooled.snps.gl.vcf.gz'         # uncomment: stop after pooling
+                #'Output/beagle/REF.chr20.phased.dedup.vcf.gz'            # uncomment: stop after beagle
+                #'Output/prophaser/prophaser_output.txt'                  # uncomment: stop after prophaser
+                'Output/evaluate_beagle/imputation_quality_gtgl.pdf',    # uncomment: run from start through beagle to imputation quality
+                'Output/evaluate_prophaser/imputation_quality_gtgl.pdf'
+
+
+rule splitting:
+        conda:
+                'yaml/environ2.yaml'
+        input:
+                'Data/' + config['permanent']['dataset']
+        output:
+                'Output/splitting/REF.chr20.snps.gt.vcf.gz',
+                'Output/splitting/IMP.chr20.snps.gt.vcf.gz',
+                'Output/splitting/IMP.chr20.snps.gt.vcf.gz.csi',
+                'Output/splitting/REF.chr20.snps.gt.vcf.gz.csi',
+                'Output/splitting/reference.panel',
+                'Output/splitting/study.population'
+        script:
+                'Scripts/Scripts_data_splitting/data_splitting.py'
+
+
+rule pooling:
+        conda:
+                'yaml/environ2.yaml'
+        input:
+                'Output/splitting/IMP.chr20.snps.gt.vcf.gz'
+        params:
+                adaptivegls_path = 'Data/',
+                noise = config['option']['noise'],
+                fmt = config['permanent']['fmt_pooling'],
+                call_freq_v = 'Data/' + config['permanent']['call_freq_v'],
+                noise_intensity = config['option']['noise_intensity']
+        output:
+                'Output/pooling/IMP.chr20.pooled.snps.gl.vcf.gz',
+                'Output/pooling/IMP.chr20.pooled.snps.gl.vcf.gz.csi'
+        script:
+                'Scripts/Scripts_pooling/pooling-ex.py'
+
+
+rule beagle:
+        params:
+                output_splitting = 'Output/splitting/',
+                output_pooling = 'Output/pooling/',
+                output_beagle = 'Output/beagle/'
+        input:
+                'Output/splitting/REF.chr20.snps.gt.vcf.gz',
+                'Output/pooling/IMP.chr20.pooled.snps.gl.vcf.gz'
+        output:
+                'Output/beagle/REF.chr20.phased.dedup.vcf.gz',
+                'Output/beagle/REF.chr20.phased.vcf.gz',
+                'Output/beagle/IMP.chr20.pooled.unphased.vcf.gz',
+                'Output/beagle/IMP.chr20.pooled.phased.vcf.gz',
+                'Output/beagle/IMP.chr20.pooled.phased.dedup.vcf.gz',
+                'Output/beagle/IMP.chr20.pooled.imputed.vcf.gz'
+        shell:
+                '''
+                bash Scripts/Scripts_imputation/Beagle/beagle_pipeline.sh {params.output_splitting} {params.output_pooling} {params.output_beagle}
+                '''
+
+rule for_prophaser:
+        input:
+                'Output/splitting/REF.chr20.snps.gt.vcf.gz',
+                'Output/pooling/IMP.chr20.pooled.snps.gl.vcf.gz'
+        output:
+                'Output/for_prophaser/REF.chr20.snps.gt.vcf.gz',
+                'Output/for_prophaser/IMP.chr20.pooled.snps.gl.vcf.gz'
+        shell:
+                '''
+                cp Output/splitting/REF.chr20.snps.gt.vcf.gz Output/for_prophaser/
+                cp Output/pooling/IMP.chr20.pooled.snps.gl.vcf.gz Output/for_prophaser/
+                '''
+
+rule prophaser:
+        params:
+                indir = 'Output/for_prophaser/',
+                #indir = 'Output/pooling/',
+                samples_file = 'IMP.chr20.pooled.snps.gl.vcf.gz',
+                ref_file = 'Output/for_prophaser/REF.chr20.snps.gt.vcf.gz',
+                mapfile = 'Scripts/Scripts_imputation/Prophaser/5_snps_interpolated_HapMap2_map_20',
+                results_directory = 'Output/prophaser/',
+                nr_waitforfiles = 240*3+1
+        input:
+                'Output/for_prophaser/IMP.chr20.pooled.snps.gl.vcf.gz',
+                'Output/for_prophaser/REF.chr20.snps.gt.vcf.gz',
+                #'Scripts/Scripts_imputation/Prophaser/5_snps_interpolated_HapMap2_map_20'
+        output:
+                'Output/prophaser/prophaser_output.txt'
+        shell:
+                '''
+                sbatch -M snowy --array=1-240 Scripts/Scripts_imputation/Prophaser/run_omniHD_snowy.sbatch {params.indir} {params.mapfile} {params.samples_file} {params.ref_file} {params.results_directory}
+                python Scripts/Scripts_util/snakewait.py -p {params.nr_waitforfiles}
+                '''
+
+
+rule evaluate_beagle:
+        conda:
+                'yaml/environ3.yaml'
+        params:
+                path_gt2gl_script='Scripts/Scripts_imputation/Beagle/bin/gt_to_log_gl.sh',
+                variant_id_type=config['permanent']['variant_id_type'],
+                dir='./'
+        input:
+                true_gts='Output/splitting/IMP.chr20.snps.gt.vcf.gz',
+                imp_gts='Output/beagle/IMP.chr20.pooled.imputed.vcf.gz'
+        output:
+                'Output/evaluate_beagle/imputation_quality_gtgl.pdf'
+        script:
+                'Scripts/Scripts_evaluation/imputation_quality.py'
+
+
+rule for_evaluate_prophaser:
+        conda:
+                'yaml/environ2.yaml'
+        input:
+                'Output/prophaser/prophaser_output.txt'
+        output:
+                'Output/for_evaluate_prophaser/IMP.chr20.pooled.imputed.vcf.gz'
+        shell:
+                '''
+                bash Scripts/Scripts_evaluation/merge_vcf_files.sh
+                python Scripts/Scripts_util/GT_2_GT_DS_GP.py
+                bgzip -c Output/for_evaluate_prophaser/IMP.chr20.pooled.imputed.vcf > Output/for_evaluate_prophaser/IMP.chr20.pooled.imputed.vcf.gz
+                python -c 'import pysam; pysam.VariantFile("Output/for_evaluate_prophaser/IMP.chr20.pooled.imputed.vcf.gz")'
+                '''
+
+
+rule evaluate_prophaser:
+        conda:
+                'yaml/environ3.yaml'
+        params:
+                path_gt2gl_script = 'Scripts/Scripts_imputation/Beagle/bin/gt_to_log_gl.sh',
+                variant_id_type = config['permanent']['variant_id_type'],
+                dir='./'
+        input:
+                true_gts = 'Output/splitting/IMP.chr20.snps.gt.vcf.gz',
+                 imp_gts = 'Output/for_evaluate_prophaser/IMP.chr20.pooled.imputed.vcf.gz'
+        output:
+                'Output/evaluate_prophaser/imputation_quality_gtgl.pdf'
+        script:
+                'Scripts/Scripts_evaluation/imputation_quality.py'

@@ -1,0 +1,24 @@
+#!/bin/bash -l
+#SBATCH -A uppmax2022-3-1
+#SBATCH -M snowy
+#SBATCH -C mem128GB
+#SBATCH -p node
+#SBATCH -n 8
+#SBATCH -t 10:00:00
+#SBATCH -J Prophaser_std_noise_Clouard_2022
+
+echo '### loading modules                   ###'
+ml conda
+echo 'conda, check'
+ml bioinfo-tools
+echo 'bioinfo-tools, check'
+ml snakemake/6.9.1
+echo 'snakemake, check'
+ml bcftools
+echo 'bcftools, check'
+
+
+echo '### calling pipeline                  ###'
+snakemake --unlock -s pipeline --cores all
+snakemake -s pipeline --use-conda --cores all
+#snakemake --dag -np -s pipeline --use-conda --cores all | dot -Tsvg > dag.svg
