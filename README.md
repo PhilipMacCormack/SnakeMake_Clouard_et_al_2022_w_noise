@@ -56,9 +56,6 @@ This script computes the results with customized metrics from true vs. imputed d
 ##### quality.py
 This script creates metrics for assessing imputation quality.
 
-##### test_qual.py & run_test_qual.sh
-*test_qual.py* plots the metrics, and *run_test_qual.sh* is the script utilized to run *test_qual.py*.
-
 ##### chunkvcf.py
 This script enables parallelization by creating "chunks" of data to forward into the relevant scripts.
 
