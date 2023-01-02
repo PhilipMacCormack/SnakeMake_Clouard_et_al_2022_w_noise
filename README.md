@@ -56,14 +56,17 @@ This script computes the results with customized metrics from true vs. imputed d
 ##### quality.py
 This script creates metrics for assessing imputation quality.
 
-##### test_qual.py & run_test_qual.sh
-*test_qual.py* plots the metrics, and *run_test_qual.sh* is the script utilized to run *test_qual.py*.
-
 ##### chunkvcf.py
 This script enables parallelization by creating "chunks" of data to forward into the relevant scripts.
 
 ##### dataframe.py
 This script converts data into dataframes to allow downstream analysis. 
+
+##### quantiles_plots.py
+This script computes the metrics concordance and cross-entropy for assessing and comparing the imputation quality between Beagle and Prophaser.
+
+##### merge_vcf_files.py
+This script merges several vcf files into one file, used in the downstream process of prophaser output.
 
 #### Scripts_util
 
