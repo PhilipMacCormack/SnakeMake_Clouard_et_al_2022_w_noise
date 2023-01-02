@@ -62,6 +62,14 @@ This script enables parallelization by creating "chunks" of data to forward into
 ##### dataframe.py
 This script converts data into dataframes to allow downstream analysis. 
 
+##### quantiles_plots.py
+This script computes the metrics concordance and cross-entropy for assessing and comparing the imputation quality between Beagle and Prophaser.
+
+##### merge_vcf_files.py
+This script merges several vcf files into one file, used in the downstream process of prophaser output.
+
+
+
 ## File structure
 the following folders are required to be present in Output:
 -beagle
