@@ -65,5 +65,23 @@ This script enables parallelization by creating "chunks" of data to forward into
 ##### dataframe.py
 This script converts data into dataframes to allow downstream analysis. 
 
+## File structure
+the following folders are required to be present in Output:
+-beagle
+-evaluate_beagle
+-evaluate_beagle
+-evaluate_prophaser
+-for_evaluate_prophaser
+-for_prophaser
+-pooling
+-prophaser
+-quantiles
+-splitting
+
+## Environment
+the pipeline uses two different environment-files depending on the rule
+-environ2.yaml
+-environ3.yaml
+
 ## References 
 Clouard C, Ausmees K, Nettelblad C. A joint use of pooling and imputation for genotyping SNPs. BMC Bioinformatics. 2022 Oct 13;23(1):421. doi: 10.1186/s12859-022-04974-7. PMID: 36229780; PMCID: PMC9563787.
