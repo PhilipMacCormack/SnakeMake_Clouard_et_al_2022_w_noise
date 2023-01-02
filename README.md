@@ -77,10 +77,10 @@ This script allows the pipeline to wait for the results from the call to sbatch 
 This script is used by the rule for_evaluate_prophaser and changes the format of the Prophaser output file IMP.chr20.pooled.imputed.vcf to become like that of the corresponding output file of Beagle. this is to make the file compatible with scripts that evaluates the imputation quality for both Prophaser and Beagle.
 
 ## File structure
-the pipeline requires a folder named Output in the same folder. this folder is requiered to have the subfolders; beagle, evaluate_beagle, evaluate_beagle, evaluate_prophaser, for_evaluate_prophaser, for_prophaser, pooling, prophaser, quantiles, splitting
+The pipeline requires a folder named Output in the same folder. this folder is requiered to have the subfolders; beagle, evaluate_beagle, evaluate_beagle, evaluate_prophaser, for_evaluate_prophaser, for_prophaser, pooling, prophaser, quantiles, splitting
 
 ## Environment
-the pipeline uses two different environment-files depending on the rule: environ2.yaml, environ3.yaml
+The pipeline uses two different environment-files depending on the rule: environ2.yaml, environ3.yaml
 
 
 
