@@ -65,23 +65,21 @@ This script enables parallelization by creating "chunks" of data to forward into
 ##### dataframe.py
 This script converts data into dataframes to allow downstream analysis. 
 
+#### Scripts_util
+
+##### snakewait.py
+This script allows the pipeline to wait for the results from the call to sbatch in rule prophaser. The script enters a loop and exits only once the output folder prophaser has the expected number of files.
+
+##### GT_2_GT_DS_GP.py
+This script is used by the rule for_evaluate_prophaser and changes the format of the Prophaser output file IMP.chr20.pooled.imputed.vcf to become like that of the corresponding output file of Beagle. this is to make the file compatible with scripts that evaluates the imputation quality for both Prophaser and Beagle.
+
 ## File structure
-the following folders are required to be present in Output:
--beagle
--evaluate_beagle
--evaluate_beagle
--evaluate_prophaser
--for_evaluate_prophaser
--for_prophaser
--pooling
--prophaser
--quantiles
--splitting
+the pipeline requires a folder named Output in the same folder. this folder is requiered to have the subfolders; beagle, evaluate_beagle, evaluate_beagle, evaluate_prophaser, for_evaluate_prophaser, for_prophaser, pooling, prophaser, quantiles, splitting
 
 ## Environment
-the pipeline uses two different environment-files depending on the rule
--environ2.yaml
--environ3.yaml
+the pipeline uses two different environment-files depending on the rule: environ2.yaml, environ3.yaml
+
+
 
 ## References 
 Clouard C, Ausmees K, Nettelblad C. A joint use of pooling and imputation for genotyping SNPs. BMC Bioinformatics. 2022 Oct 13;23(1):421. doi: 10.1186/s12859-022-04974-7. PMID: 36229780; PMCID: PMC9563787.
