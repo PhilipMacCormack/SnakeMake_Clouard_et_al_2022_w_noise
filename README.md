@@ -3,8 +3,22 @@
 
 This project is based on the work by Clouard *et al.* 2022, their proposed simulation can be found in the following [GitHub repository](https://github.com/camcl/genotypooler), and their imputation algorithm *Prophaser* can be found in the following [GitHub repository](https://github.com/kausmees/prophaser).
 
+## Running the pipeline
+
+#### run configuration
+The config file (yaml/config.yaml) allows for setting the parameters of a run. The parameters that are intendet to be configured here are noise (True/False) and noise intensity (0-1). The greater the noise intensity, the more genotypes that will be effected.
+
+#### reset for new run
+To produce new output, all files in the given output subfolder should be removed. It is only necessary to remove the content of the folders where new output is wanted. The rules that are run in a run of the pipeline is set in the top rule (all) in the pipeline file. For the run to produce a given file, uncomment the path to that file. When initiating a run, the rules that are run are those that have output that the given file depend on. That is, if the output that those rules produce does not already exist. Use commas when specifying multiple output files.
+
+#### initiate run
+Use bash or sbatch to run the file run_pipeline.
+
+#### Output file structure
+The pipeline requires a folder named Output to be present in the same folder as the pipeline file. Output is required to have the subfolders; beagle, evaluate_beagle, evaluate_beagle, evaluate_prophaser, for_evaluate_prophaser, for_prophaser, pooling, prophaser, quantiles, splitting.
+
 ## Scripts
-This folder contains the scripts written by Clouard *et al.* 2022, with the addition of noise simulation code as well as neccessary SnakeMake adaptation. 
+This folder contains the scripts written by Clouard *et al.* 2022, (many that have to a greater or lesser extent been modified by us) with the addition of noise simulation code as well as neccessary SnakeMake adaptation. 
 
 #### Scripts_data_splitting
 
@@ -74,13 +88,10 @@ This script merges several vcf files into one file, used in the downstream proce
 This script allows the pipeline to wait for the results from the call to sbatch in rule prophaser. The script enters a loop and exits only once the output folder prophaser has the expected number of files.
 
 ##### GT_2_GT_DS_GP.py
-This script is used by the rule for_evaluate_prophaser and changes the format of the Prophaser output file IMP.chr20.pooled.imputed.vcf to become like that of the corresponding output file of Beagle. this is to make the file compatible with scripts that evaluates the imputation quality for both Prophaser and Beagle.
-
-## File structure
-The pipeline requires a folder named Output in the same folder. this folder is requiered to have the subfolders; beagle, evaluate_beagle, evaluate_beagle, evaluate_prophaser, for_evaluate_prophaser, for_prophaser, pooling, prophaser, quantiles, splitting
+This script is used by the rule for_evaluate_prophaser and changes the format of the Prophaser output file IMP.chr20.pooled.imputed.vcf to become like that of the corresponding output file of Beagle. This is to make the file compatible with scripts that evaluates the imputation quality for both Prophaser and Beagle.
 
 ## Environment
-The pipeline uses two different environment-files depending on the rule: environ2.yaml, environ3.yaml
+The pipeline uses two different environment-files depending on the rule: environ2.yaml, environ3.yaml. Both files were created by exporting conda environments. These environments were created with python/3.9.5 and for each of these environments, their own set of packages were installed. The packages installed in the environment that exports to environ2.yaml are in order of installation numpy, scipy, pandas, pysam. The equivalent for environ3.yaml is pandas, scipy, joblib, pysam, matplotlib. The full list of dependencies can be found in the yaml file of respective environment.
 
 
 
