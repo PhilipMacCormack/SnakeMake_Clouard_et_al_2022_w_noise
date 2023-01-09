@@ -81,7 +81,7 @@ This script converts data into dataframes to allow downstream analysis.
 This script computes the metrics concordance and cross-entropy for assessing and comparing the imputation quality between Beagle and Prophaser.
 
 ##### merge_vcf_files.py
-This script merges several vcf files into one file, used in the downstream process of prophaser output.
+This script merges several vcf files into one file, used in the downstream process of Prophaser output.
 
 #### Scripts_util
 
