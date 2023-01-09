@@ -4,21 +4,22 @@
 This project is based on the work by Clouard *et al.* 2022, their proposed simulation can be found in the following [GitHub repository](https://github.com/camcl/genotypooler), and their imputation algorithm *Prophaser* can be found in the following [GitHub repository](https://github.com/kausmees/prophaser).
 
 ## Running the pipeline
+The structure of the pipeline can be viewed in the file dag.svg.
 
-#### run configuration
+#### Run configuration
 The config file (yaml/config.yaml) allows for setting the parameters of a run. The parameters that are intendet to be configured here are noise (True/False) and noise intensity (0-1). The greater the noise intensity, the more genotypes that will be effected.
 
-#### reset for new run
+#### Reset for new run
 To produce new output, all files in the given output subfolder should be removed. It is only necessary to remove the content of the folders where new output is wanted. The rules that are run in a run of the pipeline is set in the top rule (all) in the pipeline file. For the run to produce a given file, uncomment the path to that file. When initiating a run, the rules that are run are those that have output that the given file depend on. That is, if the output that those rules produce does not already exist. Use commas when specifying multiple output files.
 
-#### initiate run
+#### Initiate run
 Use bash or sbatch to run the file run_pipeline.
 
 #### Output file structure
 The pipeline requires a folder named Output to be present in the same folder as the pipeline file. Output is required to have the subfolders; beagle, evaluate_beagle, evaluate_beagle, evaluate_prophaser, for_evaluate_prophaser, for_prophaser, pooling, prophaser, quantiles, splitting.
 
 ## Scripts
-This folder contains the scripts written by Clouard *et al.* 2022, (many that have to a greater or lesser extent been modified by us) with the addition of noise simulation code as well as neccessary SnakeMake adaptation. 
+This folder contains the scripts written by Clouard *et al.* 2022, (many that have to a greater or lesser extent been modified) with the addition of noise simulation code as well as neccessary SnakeMake adaptation. 
 
 #### Scripts_data_splitting
 
